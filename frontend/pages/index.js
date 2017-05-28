@@ -1,11 +1,18 @@
 import React from 'react'
 import BackgroundVideo from '../components/background-video'
 import trasformName from '../services/transform-name'
-import generateTShirt from '../services/generate-tshirt'
+import generateImage from '../services/generate-image'
 import shareImage from '../services/share-image'
 import Isvg from 'react-inlinesvg';
+import { Helmet } from "react-helmet";
+import { ShareButtons } from 'react-share';
+import _ from 'lodash';
+import FacebookProvider, { Share } from 'react-facebook';
+
+
 
 const sharedImageBaseUrl = 'https://s3.amazonaws.com/photocampaign-storage/';
+const siteUrl = 'https://limited-education.now.sh';
 
 export default class extends React.Component {
   
@@ -21,10 +28,27 @@ export default class extends React.Component {
   }
 
   onGenerateClick() {
-    generateTShirt(this.state.outputName, (imgUrl) => {
-      this.setState({ step: 1, outputImageUrl: imgUrl });
-
-    });
+    this.setState({ step: 1 });
+    if(this.state.inputName.length > 0){
+      generateImage(this.state.outputName, (imgUrl) => {
+        const imageBase64String = imgUrl.split(',').pop();
+        shareImage(imageBase64String, (err, sharedId) => {
+          console.log(sharedId);
+          if (err) {
+            // Handle error
+            alert('Failed to upload share image');
+          } else {
+            this.setState({ 
+              step: 2,
+              outputImageUrl: imgUrl,
+              sharedLink: `${siteUrl}/?shareid=${sharedId}`,
+              sharedImageUrl: `${sharedImageBaseUrl}${sharedId}.jpg`,
+            });
+          }
+        });
+      });
+    }
+    
   }
 
   onTextNameChage(e) {
@@ -36,11 +60,7 @@ export default class extends React.Component {
     this.setState({ step: 0, inputName: '', outputName: '' });
   }
 
-  onBuyClick() {
-    //TODO Open Google Forms Page
-    this.setState({ step: 2 });
-  }
-
+  // Deprecated
   onShareClick() {
     // TODO Upload image to the service and get the id response
     // Set the share link
@@ -50,18 +70,45 @@ export default class extends React.Component {
       console.log(sharedId);
       if (err) {
         // Handle error
+        alert('Failed to upload share image');
       } else {
-        this.setState({ sharedLink: `/?share_id${sharedId}` });
+        alert('uploaded');
+        this.setState({ 
+          sharedLink: `${siteUrl}/?shareid=${sharedId}`,
+          sharedImageUrl: `${sharedImageBaseUrl}${sharedId}.jpg`,
+        });
+        // FB.ui({
+        //   redirect_uri: `${siteUrl}/thankyou`,
+        //   hashtag: '',
+        //   method: 'share',
+        //   display: 'popup',
+        //   href: 'https://developers.facebook.com/docs/',
+        // }, function(response){});
       }
       
     });
   }
 
   render () {
-    //console.log(this.props.url.query);
-    // TODO fetch the share url here
-    // TODO put customized head
+    const shareId = _.get(this.props, 'url.query.shareid');
+    const { FacebookShareButton } = ShareButtons;
+
     return <div>
+      <Helmet>
+        <title>Limited Education</title>
+        <meta name="description" content="คุณก็สามารถร่วมเป็นอีกหนึ่งพลังในการสร้างโอกาสทางการศึกษาให้กับน้องๆได้ง่ายๆเพียงแค่คลิก" />
+        {shareId ?
+          <meta property="og:url" content={`siteUrl?shareid=${shareId}`} /> :
+          <meta property="og:url" content={siteUrl} />
+        }
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="คุณคิดว่าเด็กคนนั้นจะเขียนชื่อคุณออกมาเป็นอย่างไร?" />
+        <meta property="og:description" content="คุณก็สามารถร่วมเป็นอีกหนึ่งพลังในการสร้างโอกาสทางการศึกษาให้กับน้องๆได้ง่ายๆเพียงแค่คลิก" />
+        {shareId ?
+          <meta property="og:image" content={`${sharedImageBaseUrl}${shareId}.jpg`} /> :
+          <meta property="og:image" content="https://s3.amazonaws.com/photocampaign-storage/limited_website_share.jpg" />
+        }
+      </Helmet>
       <BackgroundVideo />
       <div className="page-container">
         <h1 className="page-header">ลิมิเต็ด เอ็ดดูเคชั่น</h1>
@@ -70,11 +117,26 @@ export default class extends React.Component {
         </div>
         {(this.state.step === 0) && 
           <div>
-            <input type="text" onChange={this.onTextNameChage.bind(this)} placeholder="โปรดใส่ชื่อของคุณในช่อง..."/><br />
-            <button className="btn-blue" onClick={this.onGenerateClick.bind(this)}>แสดงผล</button>
+            <div className="input-name-container">
+              <input type="text" onChange={this.onTextNameChage.bind(this)} placeholder="โปรดใส่ชื่อของคุณในช่อง..."/><br />
+            </div>
+            <button className="btn btn-blue-2" onClick={this.onGenerateClick.bind(this)}>แสดงผล</button>
+            <div>
+              <p>
+              คุณรู้รึเปล่าว่า...มีเด็กไทยมากกว่า<br/>
+              140,000 คนที่อ่านหนังสือไม่ออก<br/>
+              และ 270,000 คนที่เขียนหนังสือไม่ได้<br/>
+              คุณคิดว่าเด็กคนนั้นจะเขียนชื่อคุณออกมาเป็นอย่างไร?
+              </p>
+            </div>
           </div>
         }
         {(this.state.step === 1) && 
+          <div>
+            <span>LOADING...</span>
+          </div>
+        }
+        {(this.state.step === 2) && 
           <div>
             <img src={this.state.outputImageUrl} className="preview-generated-image"/><br />
             <div>
@@ -82,14 +144,26 @@ export default class extends React.Component {
               <p>คุณสามารถร่วมเป็นอีกหนึ่งพลังในการสร้างโอกาสทางการศึกษาให้กับน้องๆได้ง่ายๆเพียงแค่</p>
             </div>
             <div>
-              <button onClick={this.onBackClick.bind(this)}>ย้อนกลับ</button>
-              <a className="btn" href={this.state.outputImageUrl} download="output.jpg">โหลด</a>
-              <button onClick={this.onShareClick.bind(this)}>แชร์</button>
-              <button onClick={this.onBuyClick.bind(this)}>สื่อซื้อเสื้อ</button>
+              <button className="btn btn-default" onClick={this.onBackClick.bind(this)}>ย้อนกลับ</button> 
+              <a className="btn btn-blue-1" href={this.state.outputImageUrl} download="output.jpg">โหลด</a> 
+              <FacebookProvider appId="649567235238332">
+                <Share href={this.state.sharedLink} hashtag="LimitedEducation" redirectURI={`${siteUrl}/thankyou`}>
+                  <button className="btn btn-blue-2" type="button">แชร์</button>
+                </Share>
+              </FacebookProvider>
+              <a className="btn btn-blue-3" href="https://taejai.com/th/">สั่งซื้อเสื้อ</a> 
             </div>
+            {/*
+              <br />
+              {this.state.sharedLink}
+              <br />
+              <FacebookShareButton url={this.state.sharedLink} picture={this.state.sharedImageUrl} ref={(input) => { this.fbShareBtnRef = input; }}>
+                fbsharetest
+              </FacebookShareButton>
+            */}
           </div>
         }
-        {(this.state.step === 2) && 
+        {(this.state.step === 3) && 
           <form>
             <h2>Preorder</h2>
             <div className="form-group">

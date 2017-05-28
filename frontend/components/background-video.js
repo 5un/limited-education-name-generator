@@ -10,6 +10,8 @@ export default class extends React.Component {
       position: 'fixed',
       left:0,
       top:0,
+      // minWidth: '100%',
+      // minHeight: '100%';
       width: '100%',
       height: 'auto',
     }
@@ -17,7 +19,7 @@ export default class extends React.Component {
     const overlayStyle = {
       backgroundColor: 'rgba(0,0,0,0.8)',
       width: '100%',
-      height: '100%',
+      height: '150%',
       position: 'fixed',
       left: 0,
       top: 0,

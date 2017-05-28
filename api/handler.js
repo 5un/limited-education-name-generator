@@ -42,6 +42,9 @@ module.exports.shareImage = (event, context, callback) => {
         s3Resp: resp,
         id: fileId
       }),
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
     };
 
     callback(null, response);
