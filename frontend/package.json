@@ -1,0 +1,22 @@
+{
+  "name": "photocampaign-frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "next": "^3.0.0-beta6",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-inlinesvg": "^0.6.0",
+    "superagent": "^3.5.2"
+  }
+}
