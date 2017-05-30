@@ -1,5 +1,6 @@
 import React from 'react'
 import BackgroundVideo from '../components/background-video'
+import SponsorBar from '../components/sponsor-bar'
 import trasformName from '../services/transform-name'
 import generateImage from '../services/generate-image'
 import shareImage from '../services/share-image'
@@ -129,6 +130,9 @@ export default class extends React.Component {
               คุณคิดว่าเด็กคนนั้นจะเขียนชื่อคุณออกมาเป็นอย่างไร?
               </p>
             </div>
+            <footer className="footer">
+              <span>#LimitedEducation</span>
+            </footer>
           </div>
         }
         {(this.state.step === 1) && 
@@ -153,6 +157,9 @@ export default class extends React.Component {
               </FacebookProvider>
               <a className="btn btn-blue-3" href="https://taejai.com/th/">สั่งซื้อเสื้อ</a> 
             </div>
+            <footer className="footer">
+              <SponsorBar />
+            </footer>
             {/*
               <br />
               {this.state.sharedLink}
@@ -191,9 +198,6 @@ export default class extends React.Component {
             <button onClick={this.onBackClick.bind(this)}>Submit</button>
           </form>
         }
-        <div className="footer">
-          <span>#LimitedEducation</span>
-        </div>
       </div>
     </div>
   }

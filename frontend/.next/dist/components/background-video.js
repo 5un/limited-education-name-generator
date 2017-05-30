@@ -53,16 +53,15 @@ var _class = function (_React$Component) {
 
       var videoStyle = {
         position: 'fixed',
-        left: 0,
         top: 0,
-        // minWidth: '100%',
-        // minHeight: '100%';
-        width: '100%',
-        height: 'auto'
+        margin: 'auto',
+        minWidth: '100vw',
+        minHeight: '100vh'
+
       };
 
       var overlayStyle = {
-        backgroundColor: 'rgba(0,0,0,0.8)',
+        backgroundColor: 'rgba(0,0,0,0.7)',
         width: '100%',
         height: '150%',
         position: 'fixed',
@@ -72,19 +71,19 @@ var _class = function (_React$Component) {
 
       return _react2.default.createElement('div', { style: containerStyle, __source: {
           fileName: _jsxFileName,
+          lineNumber: 27
+        }
+      }, _react2.default.createElement('video', { autoPlay: true, style: videoStyle, loop: true, __source: {
+          fileName: _jsxFileName,
           lineNumber: 28
         }
-      }, _react2.default.createElement('video', { width: '100%', height: 'auto', autoPlay: true, style: videoStyle, loop: true, __source: {
+      }, _react2.default.createElement('source', { src: '/static/videos/video-1496047826.mp4', type: 'video/mp4', __source: {
           fileName: _jsxFileName,
           lineNumber: 29
         }
-      }, _react2.default.createElement('source', { src: '/static/videos/mother.mp4', type: 'video/mp4', __source: {
-          fileName: _jsxFileName,
-          lineNumber: 30
-        }
       })), _react2.default.createElement('div', { style: overlayStyle, __source: {
           fileName: _jsxFileName,
-          lineNumber: 32
+          lineNumber: 31
         }
       }));
     }

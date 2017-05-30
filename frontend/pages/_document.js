@@ -70,6 +70,9 @@ export default class MyDocument extends Document {
             }
 
             body {
+              margin: 0;
+              padding: 0;
+              border: 0;
               background-color: black;
               background-image: url('/static/images/bg-student.jpg');
               background-size: cover;
@@ -78,7 +81,7 @@ export default class MyDocument extends Document {
               color: white;
               text-align: center;
               font-family: DBHelvethaicaXRegular;
-              font-size: 36px;
+              font-size: 24px;
               min-height: 100vh;
             }
 
@@ -92,6 +95,7 @@ export default class MyDocument extends Document {
             .page-header {
               font-family: limited_education;
               font-size: 80px;
+              font-weight: normal;
               margin-bottom: 0;
             }
             
@@ -168,7 +172,6 @@ export default class MyDocument extends Document {
 
             .footer {
               margin-top: 50px;
-              padding: 40px 20px;
             }
 
           `}
