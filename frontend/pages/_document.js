@@ -90,6 +90,7 @@ export default class MyDocument extends Document {
               width: 100%;
               left:0;
               top:0;
+              padding: 20px;
             }
 
             .page-header {
@@ -97,6 +98,12 @@ export default class MyDocument extends Document {
               font-size: 80px;
               font-weight: normal;
               margin-bottom: 0;
+            }
+
+            @media (max-width: 600px) {
+              .page-header {
+                font-size: 60px;
+              }
             }
             
             .sub-header-svg {
@@ -157,6 +164,10 @@ export default class MyDocument extends Document {
               border-radius: 4px;
               background: #034784;
               color: white;
+            }
+
+            .full-width {
+              width: 100%;
             }
 
             input.input-name {

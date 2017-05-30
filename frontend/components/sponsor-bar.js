@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { Container, Breakpoint } from 'react-responsive-grid'
 
 export default class extends React.Component {
   render() {
@@ -26,12 +27,34 @@ export default class extends React.Component {
       verticalAlign: 'middle',
     };
 
+    const sponsorMobileStyle = {
+      display: 'block',
+      padding: '5px 20px'
+    };
+
     return <div style={containerStyle}>
-      {_.map(sponsors, (sponsor) => (
-        <div style={sponsorStyle}>
-          <a href={sponsor.link}><img src={`/static/images/sponsor-${sponsor.name}.png`} style={{ width: 'auto', height: sponsor.height }} /></a>
-        </div>
-      ))}
+      <Breakpoint maxWidth={700} widthMethod="componentWidth">
+        {_.map(sponsors, (sponsor) => (
+          <div style={sponsorMobileStyle}>
+            <a href={sponsor.link}><img src={`/static/images/sponsor-${sponsor.name}.png`} style={{ width: 'auto', height: sponsor.height }} /></a>
+          </div>
+        ))}
+      </Breakpoint>
+      <Breakpoint minWidth={700} widthMethod="componentWidth">
+        <Container
+            style={{
+              maxWidth: 1170,
+            }}
+          >
+          {_.map(sponsors, (sponsor) => (
+            <div style={sponsorStyle}>
+              <a href={sponsor.link}><img src={`/static/images/sponsor-${sponsor.name}.png`} style={{ width: 'auto', height: sponsor.height }} /></a>
+            </div>
+            
+
+          ))}
+        </Container>
+      </Breakpoint>
     </div>;
   }
 }

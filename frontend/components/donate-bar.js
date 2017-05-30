@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { Container, Grid, Breakpoint, Span } from 'react-responsive-grid'
 
 export default class extends React.Component {
   render() {
@@ -7,7 +8,7 @@ export default class extends React.Component {
       { name: 'teach-for-thailand', height: '39px', link: 'http://www.teachforthailand.org/TH/' },
       { name: 'learn-education', height: '29px', link: 'http://www.teachforthailand.org/TH/' },
       { name: 'edwings', height: '34px', link: 'http://www.teachforthailand.org/TH/' },
-      { name: 'a-chieve', height: '54px', link: 'http://www.teachforthailand.org/TH/' },
+      { name: 'a-chieve', height: '54px', link: 'http://www.teachforthailand.org/TH/', last: true },
     ];
 
     const containerStyle = {
@@ -16,20 +17,51 @@ export default class extends React.Component {
 
     const sponsorStyle = {
       display: 'inline-block',
+      verticalAlign: 'middle',
+      background: 'white',
+      height: '150px',
+      padding: '5px;'
+    };
+
+    const sponsorInnerStyle = {
+      padding: '40px 0'
+    };
+
+    const sponsorMobileStyle = {
+      display: 'block',
       padding: '20px 20px',
       verticalAlign: 'middle',
       background: 'white',
       margin: '5px',
-      height: '150px',
-      width: '18%'
     };
 
     return <div style={containerStyle}>
-      {_.map(sponsors, (sponsor) => (
-        <div style={sponsorStyle}>
-          <a href={sponsor.link}><img src={`/static/images/sponsor-${sponsor.name}.png`} style={{ width: 'auto', height: sponsor.height }} /></a>
-        </div>
-      ))}
+      <Breakpoint maxWidth={700} widthMethod="componentWidth">
+        {_.map(sponsors, (sponsor) => (
+          <div style={sponsorMobileStyle}>
+            <a href={sponsor.link}><img src={`/static/images/sponsor-${sponsor.name}.png`} style={{ width: 'auto', height: sponsor.height }} /></a>
+          </div>
+        ))}
+      </Breakpoint>
+      <Breakpoint minWidth={700} widthMethod="componentWidth">
+        <Container
+            style={{
+              maxWidth: 1170,
+            }}
+          >
+          <Grid columns={10}>
+            {_.map(sponsors, (sponsor) => (
+              <Span columns={2} last={sponsor.last} style={sponsorStyle}>
+                <div style={sponsorInnerStyle}>
+                  <a href={sponsor.link}><img src={`/static/images/sponsor-${sponsor.name}.png`} style={{ width: 'auto', height: sponsor.height }} /></a>
+                </div>
+              </Span>
+            ))}
+          </Grid>
+        </Container>
+      </Breakpoint>
+
+      
     </div>;
   }
 }
