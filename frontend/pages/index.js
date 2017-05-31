@@ -74,11 +74,16 @@ export default class extends React.Component {
   }
 
   renderShareButton() {
-    return (<FacebookProvider appId="649567235238332" redirectURI={`${siteUrl}/thankyou`}>
-      <Share href={this.state.sharedLink} hashtag="LimitedEducation">
-        <button className="btn btn-blue-2 full-width" type="button" onClick={this.onShareClick.bind(this)}>แชร์</button>
-      </Share>
-    </FacebookProvider>);
+    // https://www.facebook.com/sharer/sharer.php?u=https%3A//limited-education.now.sh
+    return (<div>
+      {/* <FacebookProvider appId="649567235238332" redirectURI={`${siteUrl}/thankyou`}>
+        <Share href={this.state.sharedLink} hashtag="LimitedEducation">
+          <button className="btn btn-blue-2 full-width" type="button" >แชร์</button>
+        </Share>
+      </FacebookProvider>
+    */}
+      <a className="btn btn-blue-2 full-width" href={`https://www.facebook.com/sharer/sharer.php?u=${this.state.sharedLink}&redirect_uri=${siteUrl}/thankyou`} target="_blank" onClick={this.onShareClick.bind(this)}>แชร์</a>
+    </div>);
   }
 
   renderPreorderButton() {
