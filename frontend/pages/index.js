@@ -2,6 +2,7 @@ import React from 'react'
 import Router from 'next/router'
 import BackgroundVideo from '../components/background-video'
 import SponsorBar from '../components/sponsor-bar'
+import FontSelector from '../components/font-selector'
 import trasformName from '../services/transform-name'
 import generateImage from '../services/generate-image'
 import shareImage from '../services/share-image'
@@ -9,6 +10,7 @@ import Isvg from 'react-inlinesvg';
 import { Helmet } from "react-helmet";
 import FacebookProvider, { Share } from 'react-facebook';
 import { Container, Grid, Breakpoint, Span } from 'react-responsive-grid'
+import configFonts from '../config/fonts';
 import _ from 'lodash';
 
 const sharedImageBaseUrl = 'https://s3.amazonaws.com/photocampaign-storage/';
@@ -27,10 +29,15 @@ export default class extends React.Component {
       : { userAgent: navigator.userAgent }
   }
 
-  onGenerateClick() {
-    this.setState({ step: 1 });
+  onGotoStep1Click() {
+    this.setState({ step: 1, selectedFont: configFonts[0] });
+  }
+
+  onGotoStep2Click() {
+    const selectFont = this.state.selectedFont;
+    this.setState({ step: 2 });
     if(this.state.inputName.length > 0){
-      generateImage(this.state.outputName, (imgUrl) => {
+      generateImage(this.state.outputName, { fontFamily: selectedFont.fontFamily  }, (imgUrl) => {
         const imageBase64String = imgUrl.split(',').pop();
         shareImage(imageBase64String, (err, sharedId) => {
           console.log(sharedId);
@@ -39,7 +46,7 @@ export default class extends React.Component {
             alert('Failed to upload share image');
           } else {
             this.setState({ 
-              step: 2,
+              step: 3,
               outputImageUrl: imgUrl,
               sharedLink: `${siteUrl}/?shareid=${sharedId}`,
               sharedImageUrl: `${sharedImageBaseUrl}${sharedId}.jpg`,
@@ -94,6 +101,14 @@ export default class extends React.Component {
 
   render () {
     const shareId = _.get(this.props, 'url.query.shareid');
+    const greyhoundHeaderStyle = {
+      maxHeight: '100px',
+      height: '100px',
+    };
+    const limitedEducationHeaderStyle = {
+      maxHeight: '200px',
+      maxWidth: '80%',
+    };
 
     return <div>
       <Helmet>
@@ -113,9 +128,9 @@ export default class extends React.Component {
       </Helmet>
       <BackgroundVideo />
       <div className="page-container">
-        <h1 className="page-header">ลิมิเต็ด เอ็ดดูเคชั่น</h1>
+        <h1 className="page-header"><Isvg src="/static/images/logo-greyhound-white.svg" style={greyhoundHeaderStyle}></Isvg></h1>
         <div className="sub-header-svg">
-          <Isvg src="/static/images/limited-education-text-eng.svg" style={{ height: '40px' }}></Isvg>
+          <Isvg src="/static/images/logo-limited-education-white.svg" style={limitedEducationHeaderStyle}></Isvg>
         </div>
         {(this.state.step === 0) && 
           <div>
@@ -123,10 +138,10 @@ export default class extends React.Component {
               <input type="text" onChange={this.onTextNameChage.bind(this)} placeholder="โปรดใส่ชื่อของคุณในช่อง..."/><br />
             </div>
             <Breakpoint maxWidth={700} widthMethod="componentWidth">
-              <button className="btn btn-blue-2 full-width" onClick={this.onGenerateClick.bind(this)}>แสดงผล</button>
+              <button className="btn btn-blue-2 full-width" onClick={this.onGotoStep1Click.bind(this)}>แสดงผล</button>
             </Breakpoint>
             <Breakpoint minWidth={700} widthMethod="componentWidth">
-              <button className="btn btn-blue-2" onClick={this.onGenerateClick.bind(this)}>แสดงผล</button>
+              <button className="btn btn-blue-2" onClick={this.onGotoStep1Click.bind(this)}>แสดงผล</button>
             </Breakpoint>
             <div>
               <p>
@@ -141,12 +156,19 @@ export default class extends React.Component {
             </footer>
           </div>
         }
-        {(this.state.step === 1) && 
+        {(this.state.step === 1) &&
+	  <div>
+	    <h2>Please Select Font</h2>
+	    <FontSelector />
+	    <button className="btn btn-yellow" onClick={this.onGotoStep2Click.bind(this)}>Next</button>
+	  </div>
+        }
+        {(this.state.step === 2) && 
           <div>
             <span>LOADING...</span>
           </div>
         }
-        {(this.state.step === 2) && 
+        {(this.state.step === 3) && 
           <div>
             <img src={this.state.outputImageUrl} className="preview-generated-image"/><br />
             <div>

@@ -1,4 +1,4 @@
-const generateImage = (name, cb) => {
+const generateImage = (name, options, cb) => {
   const bg = new Image();
   bg.onload = (e) => {
     console.log(e);
@@ -15,7 +15,7 @@ const generateImage = (name, cb) => {
     ctx.fill();
 
     const fontSize = 100;
-    ctx.font = `${fontSize}px limited_education`;
+    ctx.font = `${fontSize}px ${options.fontFamily}`;
     ctx.fillStyle = "black";
     ctx.textAlign="center";
     ctx.fillText(name, w / 2, (h / 2));
