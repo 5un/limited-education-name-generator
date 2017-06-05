@@ -1,5 +1,6 @@
 import React from 'react'
 import Router from 'next/router'
+import Link from 'next/link'
 import BackgroundVideo from '../components/background-video'
 import SponsorBar from '../components/sponsor-bar'
 import StepsIndicator from '../components/steps-indicator'
@@ -13,9 +14,24 @@ import FacebookProvider, { Share } from 'react-facebook';
 import { Container, Grid, Breakpoint, Span } from 'react-responsive-grid'
 import configFonts from '../config/fonts';
 import _ from 'lodash';
+import ReactGA from 'react-ga';
+
 
 const sharedImageBaseUrl = 'https://s3.amazonaws.com/photocampaign-storage/';
-const siteUrl = 'https://www.limitededucation.com';
+const siteUrl = 'https://www.limitededucation.org';
+
+const greyhoundHeaderStyle = {
+  maxWidth: '165px',
+  maxHeight: '34px',
+  margin: '20px auto 75px auto',
+};
+const limitedEducationHeaderStyle = {
+  maxWidth: '175px',
+  maxHeight: '91px',
+  marginLeft: 'auto',
+  marginRight: 'auto',
+  marginBottom: '75px',
+};
 
 export default class extends React.Component {
   
@@ -28,6 +44,11 @@ export default class extends React.Component {
     return req
       ? { userAgent: req.headers['user-agent'] }
       : { userAgent: navigator.userAgent }
+  }
+
+  componentDidMount() {
+    ReactGA.initialize('UA-72985104-5');
+    ReactGA.pageview(document.location.pathname);
   }
 
   onGotoStep1Click() {
@@ -51,6 +72,7 @@ export default class extends React.Component {
               step: 3,
               outputImageUrl: imgUrl,
               sharedLink: `${siteUrl}/?shareid=${sharedId}`,
+              sharedId: sharedId,
               sharedImageUrl: `${sharedImageBaseUrl}${sharedId}.jpg`,
             });
           }
@@ -79,15 +101,14 @@ export default class extends React.Component {
   }
 
   renderBackButton() {
-    return (<a className="btn btn-default full-width" onClick={this.onBackClick.bind(this)} href="#">ย้อนกลับ</a>);
+    return (<a className="btn btn-default full-width margin-bottom-20" onClick={this.onBackClick.bind(this)} href="#">ย้อนกลับ</a>);
   }
 
   renderDownloadButton() {
-    return (<a className="btn btn-default full-width" href={this.state.outputImageUrl} download="output.jpg">โหลด</a>);
+    return (<a className="btn btn-default full-width margin-bottom-20" href={this.state.outputImageUrl} download="output.jpg">โหลด</a>);
   }
 
   renderShareButton() {
-    // https://www.facebook.com/sharer/sharer.php?u=https%3A//limited-education.now.sh
     return (<div>
       {/* <FacebookProvider appId="649567235238332" redirectURI={`${siteUrl}/thankyou`}>
         <Share href={this.state.sharedLink} hashtag="LimitedEducation">
@@ -95,28 +116,24 @@ export default class extends React.Component {
         </Share>
       </FacebookProvider>
       */}
-      <a className="btn btn-default full-width" href={`https://www.facebook.com/sharer/sharer.php?u=${this.state.sharedLink}&redirect_uri=${siteUrl}/thankyou`} target="_blank" onClick={this.onShareClick.bind(this)}>แชร์</a>
+      <a className="btn btn-default full-width margin-bottom-20" href={`https://www.facebook.com/sharer/sharer.php?u=${this.state.sharedLink}&redirect_uri=${siteUrl}/thankyou`} target="_blank" onClick={this.onShareClick.bind(this)}>แชร์</a>
+    </div>);
+  }
+
+  renderDonateButton() {
+    return (<div>
+      <a className="btn btn-default full-width margin-bottom-20" href="https://taejai.com/th/d/limited_education/">บริจาค</a>
     </div>);
   }
 
   renderPreorderButton() {
-    return (<a className="btn btn-yellow full-width" href="https://taejai.com/th/">สั่งซื้อเสื้อ</a>);
+    const shareId = _.get(this.state, 'sharedId');
+    const { selectedFont, inputName, outputName } = this.state;
+    return (<a href={`/preorder?shareid=${shareId}&inputName=${inputName}&outputName=${outputName}&fontName=${selectedFont.name}`} className="btn btn-yellow full-width margin-bottom-20">ร่วมบริจาคและรับเสื้อ</a>);
   }
 
   render () {
     const shareId = _.get(this.props, 'url.query.shareid');
-    const greyhoundHeaderStyle = {
-      maxWidth: '165px',
-      maxHeight: '34px',
-      margin: '20px auto 75px auto',
-    };
-    const limitedEducationHeaderStyle = {
-      maxWidth: '175px',
-      maxHeight: '91px',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      marginBottom: '75px',
-    };
 
     return <div>
       <Helmet>
@@ -138,7 +155,11 @@ export default class extends React.Component {
         <BackgroundVideo />
       */}
       <div className="page-container">
-        
+        <Container
+          style={{
+            maxWidth: 1170,
+          }}
+        >
         {(this.state.step === 0) && 
           <div>
             <div style={greyhoundHeaderStyle}>
@@ -193,43 +214,38 @@ export default class extends React.Component {
             <img src={this.state.outputImageUrl} className="preview-generated-image"/><br />
             <div>
               <p>คุณเองก็สามารถช่วยกัน ดีไซน์ การศึกษาของประเทศของเราให้ดีขึ้นได้<br />
-              ด้วยการช่วยกันแชร์ต่อให้มีคนรู้เรื่องนี้มากขึ้น หรือช่วยกันสนับสนุนเงินด้วยการซื้อเสื้อ<br />
+              ด้วยการช่วยกันแชร์ต่อให้มีคนรู้เรื่องนี้มากขึ้น หรือช่วยกันสนับสนุนเงินบริจาค<br />
               เงินทุกบาทจะนำไปช่วยการศึกษาของน้อง...และอาจทำให้น้องๆเขียนชื่อคุณได้ถูกต้องในอนาคต<br />
               </p>
             </div>
             <div>
               <Breakpoint maxWidth={700} widthMethod="componentWidth">
-                {this.renderBackButton()}
                 {this.renderDownloadButton()}
                 {this.renderShareButton()}
+                {this.renderDonateButton()}
                 {this.renderPreorderButton()}
               </Breakpoint>
               <Breakpoint minWidth={700} widthMethod="componentWidth">
-                <Container
-                  style={{
-                    maxWidth: 1170,
-                  }}
-                >
                 <Grid columns={12} style={{ width: '100%' }}>
-                  <Span columns={3}>
-                    {this.renderBackButton()}
-                  </Span>
                   <Span columns={3}>
                     {this.renderDownloadButton()}
                   </Span>
                   <Span columns={3}>
                     {this.renderShareButton()}
                   </Span>
+                  <Span columns={3}>
+                    {this.renderDonateButton()}
+                  </Span>
                   <Span columns={3} last>
                     {this.renderPreorderButton()}
                   </Span>
                 </Grid>
-                </Container>
               </Breakpoint>
-              
+             
             </div>
           </div>
         }
+        </Container>
       </div>
     </div>
   }

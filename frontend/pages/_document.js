@@ -153,16 +153,17 @@ export default class MyDocument extends Document {
               color: white;
               text-align: center;
               font-family: DBHelvethaicaXUltraLight;
-              font-size: 32px;
+              font-size: 24px;
               min-height: 100vh;
             }
 
+            b, strong {
+              font-family: DBHelvethaicaXRegular;
+              font-weight: normal;
+            }
+
             .page-container {
-              position: absolute;
-              width: 100%;
-              left:0;
-              top:0;
-              padding: 20px;
+              width: 100%
             }
 
             .page-header {
@@ -280,6 +281,10 @@ export default class MyDocument extends Document {
 
             .footer {
               margin-top: 50px;
+            }
+
+            .margin-bottom-20 {
+              margin-bottom: 20px;
             }
 
           `}

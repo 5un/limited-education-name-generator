@@ -4,7 +4,7 @@ import Isvg from 'react-inlinesvg';
 import { Helmet } from "react-helmet";
 import _ from 'lodash';
 import { Container } from 'react-responsive-grid'
-
+import ReactGA from 'react-ga';
 
 const containerStyle = {
   background: '#e1e1ea',
@@ -51,9 +51,13 @@ const donateBtnStyle = {
   margin: '20px 0'
 };
 
-
-
 export default class extends React.Component {
+  
+  componentDidMount() {
+    ReactGA.initialize('UA-72985104-5');
+    ReactGA.pageview(document.location.pathname);
+  }
+
   render () {
 
     return <div style={containerStyle}>
@@ -75,7 +79,7 @@ export default class extends React.Component {
           หากคุณต้องการสนับสนุนพวกเขามากกว่านี้ มีคนที่คอยช่วยสร้างโอกาสทางการศึกษาให้กับน้องๆในด้านต่างๆ
   ร่วมให้เงินสนับสนุน ลงแรง แบ่งปันเวลา ความสามารถ ได้ที่นี่      
         </div>
-        <a className="btn btn-yellow" style={donateBtnStyle}>DONATE</a> 
+        <a className="btn btn-yellow" style={donateBtnStyle} href="https://taejai.com/th/d/limited_education/">บริจาค</a> 
       </Container>
       <DonateBar />
     </div>
