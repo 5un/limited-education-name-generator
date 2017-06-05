@@ -2,6 +2,7 @@ import React from 'react'
 import Router from 'next/router'
 import BackgroundVideo from '../components/background-video'
 import SponsorBar from '../components/sponsor-bar'
+import StepsIndicator from '../components/steps-indicator'
 import FontSelector from '../components/font-selector'
 import trasformName from '../services/transform-name'
 import generateImage from '../services/generate-image'
@@ -14,7 +15,7 @@ import configFonts from '../config/fonts';
 import _ from 'lodash';
 
 const sharedImageBaseUrl = 'https://s3.amazonaws.com/photocampaign-storage/';
-const siteUrl = 'https://limited-education.now.sh';
+const siteUrl = 'https://www.limitededucation.com';
 
 export default class extends React.Component {
   
@@ -34,10 +35,11 @@ export default class extends React.Component {
   }
 
   onGotoStep2Click() {
-    const selectFont = this.state.selectedFont;
+    console.log(this.state);
+    const selectedFont = this.state.selectedFont;
     this.setState({ step: 2 });
     if(this.state.inputName.length > 0){
-      generateImage(this.state.outputName, { fontFamily: selectedFont.fontFamily  }, (imgUrl) => {
+      generateImage(this.state.outputName, { fontFamily: selectedFont.fontFamily, childrenName: selectedFont.fullname  }, (imgUrl) => {
         const imageBase64String = imgUrl.split(',').pop();
         shareImage(imageBase64String, (err, sharedId) => {
           console.log(sharedId);
@@ -63,6 +65,10 @@ export default class extends React.Component {
     this.setState({ inputName: val, outputName: trasformName(val) });
   }
 
+  onFontSelected(font) {
+    this.setState({ selectedFont: font });
+  }
+
   onBackClick() {
     this.setState({ step: 0, inputName: '', outputName: '' });
   }
@@ -73,11 +79,11 @@ export default class extends React.Component {
   }
 
   renderBackButton() {
-    return (<button className="btn btn-default full-width" onClick={this.onBackClick.bind(this)}>ย้อนกลับ</button>);
+    return (<a className="btn btn-default full-width" onClick={this.onBackClick.bind(this)} href="#">ย้อนกลับ</a>);
   }
 
   renderDownloadButton() {
-    return (<a className="btn btn-blue-1 full-width" href={this.state.outputImageUrl} download="output.jpg">โหลด</a>);
+    return (<a className="btn btn-default full-width" href={this.state.outputImageUrl} download="output.jpg">โหลด</a>);
   }
 
   renderShareButton() {
@@ -88,92 +94,108 @@ export default class extends React.Component {
           <button className="btn btn-blue-2 full-width" type="button" >แชร์</button>
         </Share>
       </FacebookProvider>
-    */}
-      <a className="btn btn-blue-2 full-width" href={`https://www.facebook.com/sharer/sharer.php?u=${this.state.sharedLink}&redirect_uri=${siteUrl}/thankyou`} target="_blank" onClick={this.onShareClick.bind(this)}>แชร์</a>
+      */}
+      <a className="btn btn-default full-width" href={`https://www.facebook.com/sharer/sharer.php?u=${this.state.sharedLink}&redirect_uri=${siteUrl}/thankyou`} target="_blank" onClick={this.onShareClick.bind(this)}>แชร์</a>
     </div>);
   }
 
   renderPreorderButton() {
-    return (<a className="btn btn-blue-3 full-width" href="https://taejai.com/th/">สั่งซื้อเสื้อ</a>);
+    return (<a className="btn btn-yellow full-width" href="https://taejai.com/th/">สั่งซื้อเสื้อ</a>);
   }
-
-
 
   render () {
     const shareId = _.get(this.props, 'url.query.shareid');
     const greyhoundHeaderStyle = {
-      maxHeight: '100px',
-      height: '100px',
+      maxWidth: '165px',
+      maxHeight: '34px',
+      margin: '20px auto 75px auto',
     };
     const limitedEducationHeaderStyle = {
-      maxHeight: '200px',
-      maxWidth: '80%',
+      maxWidth: '175px',
+      maxHeight: '91px',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      marginBottom: '75px',
     };
 
     return <div>
       <Helmet>
         <title>Limited Education</title>
-        <meta name="description" content="คุณก็สามารถร่วมเป็นอีกหนึ่งพลังในการสร้างโอกาสทางการศึกษาให้กับน้องๆได้ง่ายๆเพียงแค่คลิก" />
+        <meta name="description" content="มีเด็กไทยมากกว่า 140,000 คนที่อ่านหนังสือไม่ออก และ 270,000 คนที่เขียนหนังสือไม่ได้ คุณเองสามารถช่วยกัน ดีไซน์ การศึกษาในประเทศของเราให้ดีขึ้นได้" />
         {shareId ?
           <meta property="og:url" content={`siteUrl?shareid=${shareId}`} /> :
           <meta property="og:url" content={siteUrl} />
         }
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="คุณคิดว่าเด็กคนนั้นจะเขียนชื่อคุณออกมาเป็นอย่างไร?" />
+        <meta property="og:title" content="คุณคิดว่าเด็กจะออกแบบชื่อคุณเป็นอย่างไร?" />
         <meta property="og:description" content="คุณก็สามารถร่วมเป็นอีกหนึ่งพลังในการสร้างโอกาสทางการศึกษาให้กับน้องๆได้ง่ายๆเพียงแค่คลิก" />
         {shareId ?
           <meta property="og:image" content={`${sharedImageBaseUrl}${shareId}.jpg`} /> :
           <meta property="og:image" content="https://s3.amazonaws.com/photocampaign-storage/limited_website_share.jpg" />
         }
       </Helmet>
-      <BackgroundVideo />
+      {/*
+        <BackgroundVideo />
+      */}
       <div className="page-container">
-        <h1 className="page-header"><Isvg src="/static/images/logo-greyhound-white.svg" style={greyhoundHeaderStyle}></Isvg></h1>
-        <div className="sub-header-svg">
-          <Isvg src="/static/images/logo-limited-education-white.svg" style={limitedEducationHeaderStyle}></Isvg>
-        </div>
+        
         {(this.state.step === 0) && 
           <div>
+            <div style={greyhoundHeaderStyle}>
+              <Isvg src="/static/images/logo-greyhound-white.svg" ></Isvg>
+            </div>
+            <div style={limitedEducationHeaderStyle}>
+              <Isvg src="/static/images/logo-limited-education-white.svg"></Isvg>
+            </div>
             <div className="input-name-container">
-              <input type="text" onChange={this.onTextNameChage.bind(this)} placeholder="โปรดใส่ชื่อของคุณในช่อง..."/><br />
+              <input type="text" className="input-name" onChange={this.onTextNameChage.bind(this)} placeholder="โปรดใส่ชื่อของคุณในช่อง..."/><br />
             </div>
             <Breakpoint maxWidth={700} widthMethod="componentWidth">
-              <button className="btn btn-blue-2 full-width" onClick={this.onGotoStep1Click.bind(this)}>แสดงผล</button>
+              <button className="btn btn-yellow" onClick={this.onGotoStep1Click.bind(this)}>แสดงผล</button>
             </Breakpoint>
             <Breakpoint minWidth={700} widthMethod="componentWidth">
-              <button className="btn btn-blue-2" onClick={this.onGotoStep1Click.bind(this)}>แสดงผล</button>
+              <button className="btn btn-yellow" onClick={this.onGotoStep1Click.bind(this)}>แสดงผล</button>
             </Breakpoint>
             <div>
               <p>
               คุณรู้รึเปล่าว่า...มีเด็กไทยมากกว่า<br/>
-              140,000 คนที่อ่านหนังสือไม่ออก<br/>
-              และ 270,000 คนที่เขียนหนังสือไม่ได้<br/>
-              คุณคิดว่าเด็กคนนั้นจะเขียนชื่อคุณออกมาเป็นอย่างไร?
+              140,000 คนที่อ่านหนังสือไม่ออก และ 270,000 คนที่เขียนหนังสือไม่ได้<br/>
+              <span>#LimitedEducation</span>
               </p>
             </div>
-            <footer className="footer">
-              <span>#LimitedEducation</span>
-            </footer>
           </div>
         }
         {(this.state.step === 1) &&
-	  <div>
-	    <h2>Please Select Font</h2>
-	    <FontSelector />
-	    <button className="btn btn-yellow" onClick={this.onGotoStep2Click.bind(this)}>Next</button>
-	  </div>
+          <div>
+            <StepsIndicator />
+            <div style={{ marginTop: '40px' }}>
+            <FontSelector 
+              selectedFont={this.state.selectedFont}
+              fonts={configFonts}
+              onFontSelected={this.onFontSelected.bind(this)} />
+            </div>
+            <button className="btn btn-yellow" onClick={this.onGotoStep2Click.bind(this)}>แสดงผล</button>
+          </div>
         }
         {(this.state.step === 2) && 
           <div>
+            <div style={limitedEducationHeaderStyle}>
+              <Isvg src="/static/images/logo-limited-education-white.svg"></Isvg>
+            </div>
             <span>LOADING...</span>
           </div>
         }
         {(this.state.step === 3) && 
           <div>
+            <div style={limitedEducationHeaderStyle}>
+              <Isvg src="/static/images/logo-limited-education-white.svg"></Isvg>
+            </div>
             <img src={this.state.outputImageUrl} className="preview-generated-image"/><br />
             <div>
-              <p>นี่คือลายมือจริงของเด็กนักเรียน ในโรงเรียนแห่งหนึ่งที่ห่างจากกรุงเทพไปไม่กี่กิโล</p>
-              <p>คุณสามารถร่วมเป็นอีกหนึ่งพลังในการสร้างโอกาสทางการศึกษาให้กับน้องๆได้ง่ายๆเพียงแค่</p>
+              <p>คุณเองก็สามารถช่วยกัน ดีไซน์ การศึกษาของประเทศของเราให้ดีขึ้นได้<br />
+              ด้วยการช่วยกันแชร์ต่อให้มีคนรู้เรื่องนี้มากขึ้น หรือช่วยกันสนับสนุนเงินด้วยการซื้อเสื้อ<br />
+              เงินทุกบาทจะนำไปช่วยการศึกษาของน้อง...และอาจทำให้น้องๆเขียนชื่อคุณได้ถูกต้องในอนาคต<br />
+              </p>
             </div>
             <div>
               <Breakpoint maxWidth={700} widthMethod="componentWidth">
@@ -188,7 +210,7 @@ export default class extends React.Component {
                     maxWidth: 1170,
                   }}
                 >
-                <Grid columns={12}>
+                <Grid columns={12} style={{ width: '100%' }}>
                   <Span columns={3}>
                     {this.renderBackButton()}
                   </Span>
@@ -206,38 +228,7 @@ export default class extends React.Component {
               </Breakpoint>
               
             </div>
-            <footer className="footer">
-              <SponsorBar />
-            </footer>
           </div>
-        }
-        {(this.state.step === 3) && 
-          <form>
-            <h2>Preorder</h2>
-            <div className="form-group">
-              <label>ชื่อของคุณ</label><br />
-              <input type="text" />
-            </div>
-            <div className="form-group">
-              <label>เบอร์โทรศัพท์</label><br />
-              <input type="text" />
-            </div>
-            <div className="form-group">
-              <label>อีเมล</label><br />
-              <input type="text" />
-            </div>
-            <div className="form-group">
-              <label>ไซส์เสื้อที่ต้องการ</label><br />
-              <input type="radio"/> <label>S (รอบอก 0 นิ้ว ความยาว 0 นิ้ว)</label><br/>
-              <input type="radio"/> <label>M (รอบอก 0 นิ้ว ความยาว 0 นิ้ว)</label><br/>
-              <input type="radio"/> <label>L (รอบอก 0 นิ้ว ความยาว 0 นิ้ว)</label><br/>
-              <input type="radio"/> <label>XL (รอบอก 0 นิ้ว ความยาว 0 นิ้ว)</label><br/>
-              <input type="radio"/> <label>XXL (รอบอก 0 นิ้ว ความยาว 0 นิ้ว)</label><br/>
-              <input type="radio"/> <label>XXXL (รอบอก 0 นิ้ว ความยาว 0 นิ้ว)</label><br/>
-            </div>
-            <button onClick={this.onBackClick.bind(this)}>Back</button>
-            <button onClick={this.onBackClick.bind(this)}>Submit</button>
-          </form>
         }
       </div>
     </div>

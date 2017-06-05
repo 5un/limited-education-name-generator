@@ -45,18 +45,6 @@ export default class MyDocument extends Document {
           <style global jsx>
            {`
             @font-face {
-              font-family: 'limited_education';
-              src: url('/static/fonts/limited_education-webfont.eot');
-              src: url('/static/fonts/limited_education-webfont.eot?#iefix') format('embedded-opentype'),
-                   url('/static/fonts/limited_education-webfont.woff2') format('woff2'),
-                   url('/static/fonts/limited_education-webfont.woff') format('woff'),
-                   url('/static/fonts/limited_education-webfont.ttf') format('truetype'),
-                   url('/static/fonts/limited_education-webfont.svg#limited_education') format('svg');
-              font-weight: normal;
-              font-style: normal;
-            }
-
-            @font-face {
               font-family: 'DBHelvethaicaXRegular';
               src: url('/static/fonts/db_helvethaica_x_v3.2-webfont.eot');
               src: url('/static/fonts/db_helvethaica_x_v3.2-webfont.eot?#iefix') format('embedded-opentype'),
@@ -69,19 +57,103 @@ export default class MyDocument extends Document {
 
             }
 
+            @font-face {
+              font-family: 'DBHelvethaicaXUltraLight';
+              src: url('/static/fonts/db_helvethaica_x_ulli_v3.2-webfont.eot');
+              src: url('/static/fonts/db_helvethaica_x_ulli_v3.2-webfont.eot?#iefix') format('embedded-opentype'),
+                   url('/static/fonts/db_helvethaica_x_ulli_v3.2-webfont.woff2') format('woff2'),
+                   url('/static/fonts/db_helvethaica_x_ulli_v3.2-webfont.woff') format('woff'),
+                   url('/static/fonts/db_helvethaica_x_ulli_v3.2-webfont.ttf') format('truetype'),
+                   url('/static/fonts/db_helvethaica_x_ulli_v3.2-webfont.svg#DBHelvethaicaXUltraLight') format('svg');
+              font-weight: normal;
+              font-style: normal;
+            }
+
+            @font-face {
+              font-family: 'limited_education';
+              src: url('/static/fonts/limited_education-webfont.eot');
+              src: url('/static/fonts/limited_education-webfont.eot?#iefix') format('embedded-opentype'),
+                   url('/static/fonts/limited_education-webfont.woff2') format('woff2'),
+                   url('/static/fonts/limited_education-webfont.woff') format('woff'),
+                   url('/static/fonts/limited_education-webfont.ttf') format('truetype'),
+                   url('/static/fonts/limited_education-webfont.svg#limited_education') format('svg');
+              font-weight: normal;
+              font-style: normal;
+            }
+
+            @font-face {
+              font-family: 'le-patiparn';
+              src: url('/static/fonts/patiparn-webfont.eot');
+              src: url('/static/fonts/patiparn-webfont.eot?#iefix') format('embedded-opentype'),
+                   url('/static/fonts/patiparn-webfont.woff2') format('woff2'),
+                   url('/static/fonts/patiparn-webfont.woff') format('woff'),
+                   url('/static/fonts/patiparn-webfont.ttf') format('truetype'),
+                   url('/static/fonts/patiparn-webfont.svg#patiparnpatiparn') format('svg');
+              font-weight: normal;
+              font-style: normal;
+            }
+
+            @font-face {
+              font-family: 'le-suradech';
+              src: url('/static/fonts/suradech-webfont.eot');
+              src: url('/static/fonts/suradech-webfont.eot?#iefix') format('embedded-opentype'),
+                   url('/static/fonts/suradech-webfont.woff2') format('woff2'),
+                   url('/static/fonts/suradech-webfont.woff') format('woff'),
+                   url('/static/fonts/suradech-webfont.ttf') format('truetype'),
+                   url('/static/fonts/suradech-webfont.svg#suradechsuradech') format('svg');
+              font-weight: normal;
+              font-style: normal;
+
+            }
+            
+            @font-face {
+              font-family: 'le-tanapon';
+              src: url('/static/fonts/tanapon-webfont.eot');
+              src: url('/static/fonts/tanapon-webfont.eot?#iefix') format('embedded-opentype'),
+                   url('/static/fonts/tanapon-webfont.woff2') format('woff2'),
+                   url('/static/fonts/tanapon-webfont.woff') format('woff'),
+                   url('/static/fonts/tanapon-webfont.ttf') format('truetype'),
+                   url('/static/fonts/tanapon-webfont.svg#tanaponregular') format('svg');
+              font-weight: normal;
+              font-style: normal;
+            }
+
+            @font-face {
+              font-family: 'le-tanatorn';
+              src: url('/static/fonts/tanatorn-webfont.eot');
+              src: url('/static/fonts/tanatorn-webfont.eot?#iefix') format('embedded-opentype'),
+                   url('/static/fonts/tanatorn-webfont.woff2') format('woff2'),
+                   url('/static/fonts/tanatorn-webfont.woff') format('woff'),
+                   url('/static/fonts/tanatorn-webfont.ttf') format('truetype'),
+                   url('/static/fonts/tanatorn-webfont.svg#tanatorntanatorn') format('svg');
+              font-weight: normal;
+              font-style: normal;
+            }
+
+            @font-face {
+              font-family: 'le-tang';
+              src: url('/static/fonts/tang-webfont.eot');
+              src: url('/static/fonts/tang-webfont.eot?#iefix') format('embedded-opentype'),
+                   url('/static/fonts/tang-webfont.woff2') format('woff2'),
+                   url('/static/fonts/tang-webfont.woff') format('woff'),
+                   url('/static/fonts/tang-webfont.ttf') format('truetype'),
+                   url('/static/fonts/tang-webfont.svg#tangregular') format('svg');
+              font-weight: normal;
+              font-style: normal;
+            }
+
             body {
               margin: 0;
               padding: 0;
               border: 0;
               background-color: black;
-              background-image: url('/static/images/bg-student.jpg');
               background-size: cover;
               background-repeat: no-repeat;
               background-position: center;
               color: white;
               text-align: center;
-              font-family: DBHelvethaicaXRegular;
-              font-size: 24px;
+              font-family: DBHelvethaicaXUltraLight;
+              font-size: 32px;
               min-height: 100vh;
             }
 
@@ -121,12 +193,19 @@ export default class MyDocument extends Document {
             }
 
             .input-name-container {
-              border: 4px solid rgba(255,255,255,0.5);
-              max-width: calc(100% - 40px);
+              background: rgba(255,255,255,0.1);
+              max-width: 80%;
               width: 600px;
-              margin: auto;
-              margin-bottom: 20px;
+              margin: 0 auto 20px auto;
               border-radius: 4px;
+              padding: 5px;
+            }
+
+            .input-name {
+              border: 1px solid white;
+              border-radius: 4px;
+              background: transparent;
+              color: white;
             }
 
             input[type="text"] {
@@ -142,9 +221,25 @@ export default class MyDocument extends Document {
               cursor: pointer;
             }
 
-            .btn-default {
-              border-radius: 4px;
-              background: #bcbec1;
+            .btn-default, a.btn-default {
+              background: transparent;
+              color: white;
+              border: 1px solid white;
+              transition: background-color 0.5s;
+            }
+
+            .btn-default:hover {
+              background-color: rgba(255, 255, 255, 0.3);
+            }
+
+            .btn-yellow {
+              background: #f9cb0b;
+              color: white;
+              transition: background-color 0.5s;
+            }
+
+            .btn-yellow:hover {
+              background: #ffdb43;
               color: white;
             }
 
@@ -166,7 +261,9 @@ export default class MyDocument extends Document {
               color: white;
             }
 
-            .full-width {
+            a.full-width, button.full-width {
+              padding-left: 0;
+              padding-right: 0;
               width: 100%;
             }
 
