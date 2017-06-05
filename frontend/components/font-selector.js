@@ -18,9 +18,18 @@ const fontSelectorTextStyle = {
 
 const fontSelectorCellStyle = {
   display: 'inline-block',
-  width: 'calc(33% - 20px)',
+  width: '33%',
   color: 'black',
-  margin: '10px',
+  padding: '20px 10px',
+
+};
+
+const fontSelectorMobileCellStyle = {
+  display: 'inline-block',
+  width: ' 90px',
+  color: 'black',
+  margin: '5px',
+
 };
 
 const fontStoryStyle = {
@@ -39,8 +48,15 @@ const fontSelectorItemStyle = {
   // backgroundPosition: 'center',
   // backgroundSize: '100% auto',
   // backgroundRepeact: 'no-repeat'
-  marginTop: '-100px',
+  marginTop: '-120px',
   marginBottom: '30px',
+  fontSize: '36px',
+}
+
+const fontSelectorItemMobileStyle = {
+  marginTop: '-70px',
+  marginBottom: '30px',
+  fontSize: '24px',
 }
 
 export default class FontSelector extends React.Component {
@@ -92,12 +108,34 @@ export default class FontSelector extends React.Component {
       {_.map(fonts, (f) => (
         <div key={f.name} style={fontSelectorCellStyle} onClick={() => (this.onFontClick(f))}>
           {f.isSelected &&
-            <img src="/static/images/font-selector.png" />
+            <img src="/static/images/font-selector.png" width="100%" height="auto"/>
           }
           {!f.isSelected &&
-            <img src="/static/images/font-selector-no-border.png" />
+            <img src="/static/images/font-selector-no-border.png" width="100%" height="auto"/>
           }
           <div style={{ ... fontSelectorItemStyle, fontFamily: f.fontFamily }}>{f.name}</div>
+        </div>
+      ))}
+    </div>;     
+  }
+
+  renderMobileFontList() {
+    const { fonts } = this.props;
+    let indexedFonts = fonts;
+    _.forEach(indexedFonts, (f, i) => {
+      f.index = i;
+      f.isSelected = this.props.selectedFont && (this.props.selectedFont.name === f.name);
+    });
+    return <div>
+      {_.map(fonts, (f) => (
+        <div key={f.name} style={fontSelectorMobileCellStyle} onClick={() => (this.onFontClick(f))}>
+          {f.isSelected &&
+            <img src="/static/images/font-selector.png" width="100%" height="auto"/>
+          }
+          {!f.isSelected &&
+            <img src="/static/images/font-selector-no-border.png" width="100%" height="auto" />
+          }
+          <div style={{ ... fontSelectorItemMobileStyle, fontFamily: f.fontFamily }}>{f.name}</div>
         </div>
       ))}
     </div>;     
@@ -111,7 +149,7 @@ export default class FontSelector extends React.Component {
   			<Breakpoint maxWidth={700} widthMethod="componentWidth">
           <div style={{ padding: '0 20px' }}>
           <h2 style={fontSelectorHeaderStyle}>เลือกฟอนต์ลายมือน้อง</h2>
-  				{this.renderFontList()}
+  				{this.renderMobileFontList()}
           </div>
           <br />
           <div style={fontStoryStyle}>

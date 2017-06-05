@@ -21,13 +21,13 @@ const sharedImageBaseUrl = 'https://s3.amazonaws.com/photocampaign-storage/';
 const siteUrl = 'https://www.limitededucation.org';
 
 const greyhoundHeaderStyle = {
-  maxWidth: '165px',
-  maxHeight: '34px',
+  width: '165px',
+  height: '34px',
   margin: '20px auto 75px auto',
 };
 const limitedEducationHeaderStyle = {
-  maxWidth: '175px',
-  maxHeight: '91px',
+  width: '175px',
+  height: '91px',
   marginLeft: 'auto',
   marginRight: 'auto',
   marginBottom: '75px',

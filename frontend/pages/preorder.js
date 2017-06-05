@@ -40,8 +40,8 @@ const validationErrorStyle = {
 };
 
 const limitedEducationHeaderStyle = {
-  maxWidth: '175px',
-  maxHeight: '91px',
+  width: '175px',
+  height: '91px',
   marginLeft: 'auto',
   marginRight: 'auto',
   marginBottom: '75px',
@@ -59,8 +59,10 @@ const textboxStyle = {
   background: 'transparent',
   border: '1px solid white',
   color: 'white',
-  fontSize: '18px;',
-  lineHeight: '18px',
+  fontSize: '30px',
+  lineHeight: '30px',
+  width: '100%',
+  fontFamily: 'DBHelvethaicaXRegular'
 }
 
 const radioStyle = {
@@ -223,7 +225,7 @@ export default class extends React.Component {
               <span style={validationErrorStyle}>{this.state.validationErrors.inputAddress}</span>
             }
           </div>
-          <button onClick={this.onPreorderClick.bind(this)} className="btn btn-yellow" style={{ marginLeft:'30px', marginTop: '40px' }}>บริจาค</button>
+          <button onClick={this.onPreorderClick.bind(this)} className="btn btn-yellow" style={{ marginTop: '40px' }}>บริจาค</button>
       </form>}
       {this.state.preorderCompleted && 
         <h2>Preorder Completed!</h2>

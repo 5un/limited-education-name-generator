@@ -29,9 +29,10 @@ export default class MyDocument extends Document {
   get helmetJsx () {
     return (<Helmet
       htmlAttributes={{lang: 'en'}}
-      title='Hello next.js!'
+      title='Limited Education'
       meta={[
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'description', content: 'มีเด็กไทยมากกว่า 140,000 คนที่อ่านหนังสือไม่ออก และ 270,000 คนที่เขียนหนังสือไม่ได้ คุณเองสามารถช่วยกัน ดีไซน์ การศึกษาในประเทศของเราให้ดีขึ้นได้' }
       ]}
     />)
   }
@@ -141,6 +142,12 @@ export default class MyDocument extends Document {
               font-weight: normal;
               font-style: normal;
             }
+            
+            * {
+              -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+              -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+              box-sizing: border-box;         /* Opera/IE 8+ */
+            }
 
             body {
               margin: 0;
@@ -163,7 +170,9 @@ export default class MyDocument extends Document {
             }
 
             .page-container {
-              width: 100%
+              width: 100%;
+              padding: 20px;
+
             }
 
             .page-header {
@@ -195,8 +204,7 @@ export default class MyDocument extends Document {
 
             .input-name-container {
               background: rgba(255,255,255,0.1);
-              max-width: 80%;
-              width: 600px;
+              max-width: 600px;
               margin: 0 auto 20px auto;
               border-radius: 4px;
               padding: 5px;
@@ -207,11 +215,7 @@ export default class MyDocument extends Document {
               border-radius: 4px;
               background: transparent;
               color: white;
-            }
-
-            input[type="text"] {
-              width: calc(100% - 40px);
-              padding: 0 20px;
+              width: 100%;
             }
 
             button, a.btn {
@@ -266,6 +270,12 @@ export default class MyDocument extends Document {
               padding-left: 0;
               padding-right: 0;
               width: 100%;
+            }
+
+            @media (max-width: 600px) {
+              button.btn, a.btn {
+                width: 100%;
+              }
             }
 
             input.input-name {

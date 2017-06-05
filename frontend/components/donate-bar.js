@@ -7,7 +7,7 @@ export default class extends React.Component {
       { name: 'yuwapat', height: '58px', link: 'https://www.facebook.com/yuvabadhana/' },
       { name: 'teach-for-thailand', height: '39px', link: 'http://www.teachforthailand.org/TH/' },
       { name: 'learn-education', height: '29px', link: 'http://www.learneducation.co.th' },
-      { name: 'edwings', height: '34px', link: '้http://www.edwings.co.th' },
+      { name: 'edwings', height: '34px', link: 'http://www.edwings.co.th' },
       { name: 'a-chieve', height: '54px', link: 'http://www.a-chieve.org/', last: true },
     ];
 
