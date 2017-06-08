@@ -11,7 +11,6 @@ const transformations = [
   { from: 'ิ', fn: (name) => (name.replace(/ิ/i, 'ี')) },
   { from: 'พ', fn: (name) => (name.replace(/พ/i, 'ผ')) },
   { from: 'ผ', fn: (name) => (name.replace(/ผ/i, 'พ')) },
-  { from: 'า', fn: (name) => (name.replace(/า/i, 'าา')) },
   { from: 'ข', fn: (name) => (name.replace(/ข/i, 'ป')) },
   { from: 'ข', fn: (name) => (name.replace(/ข/i, 'บ')) },
   { from: 'บ', fn: (name) => (name.replace(/บ/i, 'ข')) },

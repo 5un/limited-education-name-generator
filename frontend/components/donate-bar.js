@@ -6,7 +6,7 @@ export default class extends React.Component {
     const sponsors = [
       { name: 'yuwapat', height: '58px', link: 'https://www.facebook.com/yuvabadhana/' },
       { name: 'teach-for-thailand', height: '39px', link: 'http://www.teachforthailand.org/TH/' },
-      { name: 'learn-education', height: '29px', link: 'http://www.learneducation.co.th' },
+      { name: 'learn-education', height: '29px', link: 'https://www.facebook.com/LearnEducationThai/photos/a.1704702656421578.1073741828.1701022726789571/2296844717207366/?type=3&theater' },
       { name: 'edwings', height: '34px', link: 'http://www.edwings.co.th' },
       { name: 'a-chieve', height: '54px', link: 'http://www.a-chieve.org/', last: true },
     ];
@@ -52,9 +52,11 @@ export default class extends React.Component {
           <Grid columns={10}>
             {_.map(sponsors, (sponsor) => (
               <Span columns={2} last={sponsor.last} style={sponsorStyle}>
-                <div style={sponsorInnerStyle}>
-                  <a href={sponsor.link}><img src={`/static/images/sponsor-${sponsor.name}.png`} style={{ width: 'auto', height: sponsor.height }} /></a>
-                </div>
+                <a href={sponsor.link}>
+                  <div style={sponsorInnerStyle}>
+                    <img src={`/static/images/sponsor-${sponsor.name}.png`} style={{ width: 'auto', height: sponsor.height }} />
+                  </div>
+                </a>
               </Span>
             ))}
           </Grid>

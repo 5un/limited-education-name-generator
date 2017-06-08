@@ -9,7 +9,7 @@ import trasformName from '../services/transform-name'
 import generateImage from '../services/generate-image'
 import shareImage from '../services/share-image'
 import Isvg from 'react-inlinesvg';
-import { Helmet } from "react-helmet";
+import { Helmet } from 'react-helmet';
 import FacebookProvider, { Share } from 'react-facebook';
 import { Container, Grid, Breakpoint, Span } from 'react-responsive-grid'
 import configFonts from '../config/fonts';
@@ -32,6 +32,16 @@ const limitedEducationHeaderStyle = {
   marginRight: 'auto',
   marginBottom: '75px',
 };
+const eventModeLabelStyle = {
+  background: 'red',
+  color: 'white',
+  position: 'fixed',
+  left: '10px',
+  top: '10px',
+  padding: '5px',
+  fontSize: '16px',
+  borderRadius: '20px'
+}
 
 export default class extends React.Component {
   
@@ -129,11 +139,15 @@ export default class extends React.Component {
   renderPreorderButton() {
     const shareId = _.get(this.state, 'sharedId');
     const { selectedFont, inputName, outputName } = this.state;
-    return (<a href={`/preorder?shareid=${shareId}&inputName=${inputName}&outputName=${outputName}&fontName=${selectedFont.name}`} className="btn btn-yellow full-width margin-bottom-20">ร่วมบริจาคและรับเสื้อ</a>);
+    const eventMode = _.get(this.props, 'url.query.mode', '') === 'event';
+    const eventKey = _.get(this.props, 'url.query.key', '');
+    const eventQueries = eventMode ? `&mode=event&key=${eventKey}` : ''; 
+    return (<a href={`/preorder?shareid=${shareId}&inputName=${inputName}&outputName=${outputName}&fontName=${selectedFont.name}${eventQueries}`} className="btn btn-yellow full-width margin-bottom-20">ร่วมบริจาคและรับเสื้อ</a>);
   }
 
   render () {
     const shareId = _.get(this.props, 'url.query.shareid');
+    const eventMode = _.get(this.props, 'url.query.mode', '') === 'event';
 
     return <div>
       <Helmet>
@@ -150,6 +164,8 @@ export default class extends React.Component {
           <meta property="og:image" content={`${sharedImageBaseUrl}${shareId}.jpg`} /> :
           <meta property="og:image" content="https://s3.amazonaws.com/photocampaign-storage/limited_website_share.jpg" />
         }
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
       </Helmet>
       {/*
         <BackgroundVideo />
@@ -203,7 +219,11 @@ export default class extends React.Component {
             <div style={limitedEducationHeaderStyle}>
               <Isvg src="/static/images/logo-limited-education-white.svg"></Isvg>
             </div>
-            <span>LOADING...</span>
+            <div>
+              <div className="loader"/>
+              <div>LOADING...</div>
+            </div>
+            
           </div>
         }
         {(this.state.step === 3) && 
@@ -241,12 +261,15 @@ export default class extends React.Component {
                   </Span>
                 </Grid>
               </Breakpoint>
-             
+              <button onClick={this.onBackClick.bind(this)} className="btn btn-transparent">กลับไปทำใหม่</button>
             </div>
           </div>
         }
         </Container>
       </div>
+      {eventMode &&
+        <div style={eventModeLabelStyle}>EVENT MODE</div>
+      }
     </div>
   }
 
