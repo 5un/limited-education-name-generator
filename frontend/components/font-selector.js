@@ -90,7 +90,7 @@ export default class FontSelector extends React.Component {
       {selectedFont &&
         <div>
           <div>{selectedFont.story}</div>
-          <span style={fontStoryNameStyle}>{selectedFont.fullname}</span>
+          <span style={fontStoryNameStyle}>จากเรื่องราวจริงของเด็กอีกหลายคน</span>
         </div>
       }
       </div>
@@ -156,7 +156,7 @@ export default class FontSelector extends React.Component {
             {selectedFont &&
               <div>
                 <div>{selectedFont.story}</div>
-                <span style={fontStoryNameStyle}>{selectedFont.fullname}</span>
+                <span style={fontStoryNameStyle}>จากเรื่องราวจริงของเด็กอีกหลายคน</span>
               </div>
             }
           </div>

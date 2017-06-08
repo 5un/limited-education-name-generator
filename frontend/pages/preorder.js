@@ -1,4 +1,5 @@
 import React from 'react'
+import Router from 'next/router'
 import DonateBar from '../components/donate-bar'
 import Isvg from 'react-inlinesvg';
 import { Helmet } from "react-helmet";
@@ -175,10 +176,15 @@ export default class extends React.Component {
     preorder(preorderInfo, (err, message) => {
       this.setState({ loading: false });
       if (err) {
-
+        console.log(err);
+        alert(message.message);
       } else {
         //this.setState({ preorderCompleted: true });
-        window.location.href = 'https://taejai.com/th/d/limited_education/';
+        if(eventMode) {
+          Router.push('/thankyou?mode=event');
+        } else {
+          window.location.href = 'https://taejai.com/th/d/limited_education/';
+        }
       }
     });
   }
@@ -208,7 +214,7 @@ export default class extends React.Component {
      return <div style={shirtInfoStyle}>
       {(enableCustomShirtOrder || eventMode) &&
         <div>
-          <h3>499.- บาท</h3>
+          <h3>499.- บาท (รับหน้างาน)<br/>550.- บาท (ส่งไปรษณีย์ ภายในเดือนกรกฎาคม 2560 เป็นต้นไป)</h3>
           <p>รับเสื้อ #LimitedEducation ที่เป็น “ชื่อ” ของคุณ 
           Design by เด็กที่อายุเทียบเท่าชั้น ม.ต้น
           </p>
@@ -234,7 +240,7 @@ export default class extends React.Component {
           <p>สำหรับผู้ที่ต้องการบริจาคเพิ่มเติม 
           ตั้งแต่วันที่ 6 มิถุนายน 2560 เวลา 18:00 น. ทุกการบริจาคตั้งแต่ 550 บาท 
           จะได้รับเสื้อที่ระลึกลายโลโก้ Greyhound Limited Education 
-          ภายในเดือนกรกฎาคม 2560 (รวมค่าจัดส่งไปรษณีย์แล้ว)
+          ภายในเดือนกรกฎาคม 2560 เป็นต้นไป (รวมค่าจัดส่งไปรษณีย์แล้ว)
           </p>
           <a href="/static/images/limited-tshirt-2.jpg" target="_blank"><img src="/static/images/limited-tshirt-2.jpg" style={{ width: '100%' }}/></a>
           <p>
@@ -299,13 +305,19 @@ export default class extends React.Component {
             {eventMode && 
               <div>
               <input type="radio" name="inputDeliveryMethod" value="atbooth" onChange={this.onFormValueChanged.bind(this)} style={radioStyle}/> 
+              <label>รับวันนี้ (เสื้อพร้อมรับ 1-2 ชั่วโมงหลังจากที่สั่ง)
+              </label><br /><br /></div>
+            }
+            {(!eventMode && enableCustomShirtOrder) && 
+              <div>
+              <input type="radio" name="inputDeliveryMethod" value="atbooth" onChange={this.onFormValueChanged.bind(this)} style={radioStyle}/> 
               <label>รับเสื้อหน้างานวันที่ 10-11 มิถุนายน<br />ที่ booth Education Pavilion @ Central World Eden Zone Fl. 2
               </label><br /><br /></div>
             }
             {eventMode &&
             <div>
               <input type="radio" name="inputDeliveryMethod" value="post" onChange={this.onFormValueChanged.bind(this)} style={radioStyle}/>
-              <label>ส่งทางไปรษณีย์
+              <label>ส่งทางไปรษณีย์ (ราคาเสื้อพร้อมจัดส่ง: 550.-บาท/ตัว และจะจัดส่งภายในเดือนกรกฎาคมเป็นต้นไป)
               </label>
             </div>
             }

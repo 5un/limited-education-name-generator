@@ -62,7 +62,9 @@ export default class extends React.Component {
   }
 
   onGotoStep1Click() {
-    this.setState({ step: 1, selectedFont: configFonts[0] });
+    const eventMode = _.get(this.props, 'url.query.mode', '') === 'event';
+    const availableFonts = eventMode ? _.filter(configFonts, 'showInEvent') : configFonts;
+    this.setState({ step: 1, selectedFont: availableFonts[0], availableFonts });
   }
 
   onGotoStep2Click() {
@@ -208,7 +210,7 @@ export default class extends React.Component {
             <div style={{ marginTop: '40px' }}>
             <FontSelector 
               selectedFont={this.state.selectedFont}
-              fonts={configFonts}
+              fonts={this.state.availableFonts}
               onFontSelected={this.onFontSelected.bind(this)} />
             </div>
             <button className="btn btn-yellow" onClick={this.onGotoStep2Click.bind(this)}>แสดงผล</button>
@@ -240,23 +242,19 @@ export default class extends React.Component {
             </div>
             <div>
               <Breakpoint maxWidth={700} widthMethod="componentWidth">
-                {this.renderDownloadButton()}
-                {this.renderShareButton()}
-                {this.renderDonateButton()}
+                {!eventMode && this.renderDownloadButton()}
+                {!eventMode && this.renderShareButton()}
                 {this.renderPreorderButton()}
               </Breakpoint>
               <Breakpoint minWidth={700} widthMethod="componentWidth">
-                <Grid columns={12} style={{ width: '100%' }}>
-                  <Span columns={3}>
-                    {this.renderDownloadButton()}
+                <Grid columns={12} style={{ width: eventMode ? '30%' : '100%', margin: 'auto' }}>
+                  <Span columns={4}>
+                    {!eventMode && this.renderDownloadButton()}
                   </Span>
-                  <Span columns={3}>
-                    {this.renderShareButton()}
+                  <Span columns={4}>
+                    {!eventMode && this.renderShareButton()}
                   </Span>
-                  <Span columns={3}>
-                    {this.renderDonateButton()}
-                  </Span>
-                  <Span columns={3} last>
+                  <Span columns={eventMode ? 12 : 4} last>
                     {this.renderPreorderButton()}
                   </Span>
                 </Grid>

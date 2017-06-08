@@ -59,7 +59,7 @@ export default class extends React.Component {
   }
 
   render () {
-
+    const eventMode = _.get(this.props, 'url.query.mode', '') === 'event';
     return <div style={containerStyle}>
       <div style={greyhoundHeaderStyle}>
         <Isvg src="/static/images/logo-greyhound-black.svg" ></Isvg>
@@ -75,11 +75,17 @@ export default class extends React.Component {
         <div style={thankyouMessageContainerStyle}>
           <h2 style={thankyouMessageStyle}>ขอบคุณที่ช่วยสร้างการเปลี่ยนแปลงให้กับการศึกษาไทย</h2>
         </div>
+        {eventMode && 
+          <a className="btn btn-yellow" style={donateBtnStyle} href="/?mode=event&key=gIepxG26bkidrmqBlDgEfviqCiZ1ALJ3">กลับไปทำใหม่</a> 
+        }
         <div>
           หากคุณต้องการสนับสนุนพวกเขามากกว่านี้ มีคนที่คอยช่วยสร้างโอกาสทางการศึกษาให้กับน้องๆในด้านต่างๆ
   ร่วมให้เงินสนับสนุน ลงแรง แบ่งปันเวลา ความสามารถ ได้ที่นี่      
         </div>
-        <a className="btn btn-yellow" style={donateBtnStyle} href="https://taejai.com/th/d/limited_education/">บริจาค</a> 
+        {!eventMode && 
+          <a className="btn btn-yellow" style={donateBtnStyle} href="https://taejai.com/th/d/limited_education/">บริจาค</a> 
+        }
+        
       </Container>
       <DonateBar />
     </div>
