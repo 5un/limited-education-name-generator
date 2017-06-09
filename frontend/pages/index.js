@@ -19,6 +19,7 @@ import ReactGA from 'react-ga';
 
 const sharedImageBaseUrl = 'https://s3.amazonaws.com/photocampaign-storage/';
 const siteUrl = 'https://www.limitededucation.org';
+const MAX_CHARS = 15;
 
 const greyhoundHeaderStyle = {
   width: '165px',
@@ -47,7 +48,7 @@ export default class extends React.Component {
   
   constructor(props) {
     super(props);
-    this.state = { step: 0 };
+    this.state = { step: 0, inputName: '' };
   }
 
   static async getInitialProps ({ req }) {
@@ -144,7 +145,10 @@ export default class extends React.Component {
     const eventMode = _.get(this.props, 'url.query.mode', '') === 'event';
     const eventKey = _.get(this.props, 'url.query.key', '');
     const eventQueries = eventMode ? `&mode=event&key=${eventKey}` : ''; 
-    return (<a href={`/preorder?shareid=${shareId}&inputName=${inputName}&outputName=${outputName}&fontName=${selectedFont.name}${eventQueries}`} className="btn btn-yellow full-width margin-bottom-20">ร่วมบริจาคและรับเสื้อ</a>);
+    return (<div>
+      <a href={`/preorder?shareid=${shareId}&inputName=${inputName}&outputName=${outputName}&fontName=${selectedFont.name}${eventQueries}`} className="btn btn-yellow full-width margin-bottom-20">ร่วมบริจาคและรับเสื้อ</a><br/>
+      **สำหรับยอดบริจาค 550.- บาท เป็นต้นไปรับเสื้อที่ระลึก
+    </div>);
   }
 
   render () {
@@ -187,8 +191,12 @@ export default class extends React.Component {
               <Isvg src="/static/images/logo-limited-education-white.svg"></Isvg>
             </div>
             <div className="input-name-container">
-              <input type="text" className="input-name" onChange={this.onTextNameChage.bind(this)} placeholder="โปรดใส่ชื่อของคุณในช่อง..."/><br />
+              <input type="text" className="input-name" onChange={this.onTextNameChage.bind(this)} placeholder="โปรดใส่ชื่อของคุณในช่อง..." maxLength={MAX_CHARS} /><br />
             </div>
+            {
+            }
+            <span>ความยาวของชื่อ {this.state.inputName.length} / {MAX_CHARS} อักขระ</span>
+            <br /><br />
             <Breakpoint maxWidth={700} widthMethod="componentWidth">
               <button className="btn btn-yellow" onClick={this.onGotoStep1Click.bind(this)}>แสดงผล</button>
             </Breakpoint>
