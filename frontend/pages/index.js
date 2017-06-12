@@ -77,20 +77,24 @@ export default class extends React.Component {
     if(this.state.outputName.length > 0){
       generateImage(this.state.outputName, { fontFamily: selectedFont.fontFamily, childrenName: selectedFont.fullname  }, (imgUrl) => {
         const imageBase64String = imgUrl.split(',').pop();
-        shareImage(imageBase64String, (err, sharedId) => {
-          if (err) {
-            // Handle error
-            alert('Failed to upload share image');
-          } else {
-            this.setState({ 
-              step: 3,
-              outputImageUrl: imgUrl,
-              sharedLink: `${siteUrl}/?shareid=${sharedId}`,
-              sharedId: sharedId,
-              sharedImageUrl: `${sharedImageBaseUrl}${sharedId}.jpg`,
-            });
-          }
+        this.setState({ 
+          step: 3,
+          outputImageUrl: imgUrl,
         });
+        // shareImage(imageBase64String, (err, sharedId) => {
+        //   if (err) {
+        //     // Handle error
+        //     alert('Failed to upload share image');
+        //   } else {
+        //     this.setState({ 
+        //       step: 3,
+        //       outputImageUrl: imgUrl,
+        //       sharedLink: `${siteUrl}/?shareid=${sharedId}`,
+        //       sharedId: sharedId,
+        //       sharedImageUrl: `${sharedImageBaseUrl}${sharedId}.jpg`,
+        //     });
+        //   }
+        // });
       });
     }
     
@@ -114,7 +118,21 @@ export default class extends React.Component {
 
   // Deprecated
   onShareClick() {
-    Router.push('/thankyou');
+    const imgUrl = this.state.outputImageUrl;
+    const imageBase64String = imgUrl.split(',').pop();
+    this.setState({ shareLoading: true });
+    shareImage(imageBase64String, (err, sharedId) => {
+      this.setState({ shareLoading: false });
+      if (err) {
+        // Handle error
+        alert('Failed to upload share image');
+      } else {
+        const sharedLink = `${siteUrl}/?shareid=${sharedId}`;
+        const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${sharedLink}&redirect_uri=${siteUrl}/thankyou`;
+        window.open(shareUrl, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
+        Router.push('/thankyou');
+      }
+    });
   }
 
   renderBackButton() {
@@ -133,7 +151,10 @@ export default class extends React.Component {
         </Share>
       </FacebookProvider>
       */}
+      {/*
       <a className="btn btn-default full-width margin-bottom-20" href={`https://www.facebook.com/sharer/sharer.php?u=${this.state.sharedLink}&redirect_uri=${siteUrl}/thankyou`} target="_blank" onClick={this.onShareClick.bind(this)}>แชร์</a>
+      */}
+      <button className="btn btn-default full-width margin-bottom-20" onClick={this.onShareClick.bind(this)}>{ this.state.shareLoading ? 'กำลังแชร์' : 'แชร์' }</button>
     </div>);
   }
 
