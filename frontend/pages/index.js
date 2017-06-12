@@ -20,6 +20,7 @@ import ReactGA from 'react-ga';
 const sharedImageBaseUrl = 'https://s3.amazonaws.com/photocampaign-storage/';
 const siteUrl = 'https://www.limitededucation.org';
 const MAX_CHARS = 15;
+const latinAlphabets = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
 const greyhoundHeaderStyle = {
   width: '165px',
@@ -65,18 +66,18 @@ export default class extends React.Component {
   onGotoStep1Click() {
     const eventMode = _.get(this.props, 'url.query.mode', '') === 'event';
     const availableFonts = eventMode ? _.filter(configFonts, 'showInEvent') : configFonts;
-    this.setState({ step: 1, selectedFont: availableFonts[0], availableFonts });
+    if(!this.state.haveLatinAlpha && this.state.outputName.length > 0){
+      this.setState({ step: 1, selectedFont: availableFonts[0], availableFonts });
+    }
   }
 
   onGotoStep2Click() {
-    console.log(this.state);
     const selectedFont = this.state.selectedFont;
     this.setState({ step: 2 });
-    if(this.state.inputName.length > 0){
+    if(this.state.outputName.length > 0){
       generateImage(this.state.outputName, { fontFamily: selectedFont.fontFamily, childrenName: selectedFont.fullname  }, (imgUrl) => {
         const imageBase64String = imgUrl.split(',').pop();
         shareImage(imageBase64String, (err, sharedId) => {
-          console.log(sharedId);
           if (err) {
             // Handle error
             alert('Failed to upload share image');
@@ -97,7 +98,10 @@ export default class extends React.Component {
 
   onTextNameChage(e) {
     const val = e.target.value;
-    this.setState({ inputName: val, outputName: trasformName(val) });
+    const stripAlpha = val.replace(/[a-z]/gi, '');
+    const haveLatinAlpha = (val.length !== 0) && (val.length !== stripAlpha.length);
+    const outputName = trasformName(stripAlpha);
+    this.setState({ inputName: val, outputName, haveLatinAlpha });
   }
 
   onFontSelected(font) {
@@ -151,6 +155,14 @@ export default class extends React.Component {
     </div>);
   }
 
+  renderConfirmationButton() {
+    const shareId = _.get(this.state, 'sharedId');
+    const { selectedFont, inputName, outputName } = this.state;
+    return (<div>
+      <a href={`/preorder?shareid=${shareId}&inputName=${inputName}&outputName=${outputName}&fontName=${selectedFont.name}&mode=confirmation`} className="btn btn-default full-width margin-bottom-20" style={{ fontSize: '28px', lineHeight: '28px' }}>บริจาคแล้ว<br />ต้องการยืนยันการรับเสื้อ</a>
+    </div>);
+  }
+
   render () {
     const shareId = _.get(this.props, 'url.query.shareid');
     const eventMode = _.get(this.props, 'url.query.mode', '') === 'event';
@@ -193,8 +205,9 @@ export default class extends React.Component {
             <div className="input-name-container">
               <input type="text" className="input-name" onChange={this.onTextNameChage.bind(this)} placeholder="โปรดใส่ชื่อของคุณในช่อง..." maxLength={MAX_CHARS} /><br />
             </div>
-            {
-            }
+            {!this.state.haveLatinAlpha && <span>ระบบใช้เฉพาะภาษาไทยเท่านั้นนะคะ</span>}
+            {this.state.haveLatinAlpha && <span style={{ color: 'red' }}>ระบบใช้เฉพาะภาษาไทยเท่านั้นนะคะ</span>}
+            <br />
             <span>ความยาวของชื่อ {this.state.inputName.length} / {MAX_CHARS} อักขระ</span>
             <br /><br />
             <Breakpoint maxWidth={700} widthMethod="componentWidth">
@@ -253,17 +266,21 @@ export default class extends React.Component {
                 {!eventMode && this.renderDownloadButton()}
                 {!eventMode && this.renderShareButton()}
                 {this.renderPreorderButton()}
+                {!eventMode && this.renderConfirmationButton()}
               </Breakpoint>
               <Breakpoint minWidth={700} widthMethod="componentWidth">
                 <Grid columns={12} style={{ width: eventMode ? '30%' : '100%', margin: 'auto' }}>
-                  <Span columns={4}>
+                  <Span columns={3}>
                     {!eventMode && this.renderDownloadButton()}
                   </Span>
-                  <Span columns={4}>
+                  <Span columns={3}>
                     {!eventMode && this.renderShareButton()}
                   </Span>
-                  <Span columns={eventMode ? 12 : 4} last>
+                  <Span columns={eventMode ? 12 : 3}>
                     {this.renderPreorderButton()}
+                  </Span>
+                  <Span columns={3} last>
+                    {!eventMode && this.renderConfirmationButton()}
                   </Span>
                 </Grid>
               </Breakpoint>

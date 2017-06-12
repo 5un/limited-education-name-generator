@@ -164,9 +164,17 @@ export default class MyDocument extends Document {
               min-height: 100vh;
             }
 
+            a {
+              color: white; 
+            }
+
             b, strong {
               font-family: DBHelvethaicaXRegular;
               font-weight: normal;
+            }
+
+            small {
+              font-size: 18px;
             }
 
             .page-container {

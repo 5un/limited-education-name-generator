@@ -145,11 +145,12 @@ export default class extends React.Component {
 
     const { inputType, inputSize, inputMobile, inputEmail, inputDeliveryMethod, inputAddress, inputDeliveryName } = this.state;
     const eventMode = _.get(this.props, 'url.query.mode', '') === 'event';
+    const confirmationMode = _.get(this.props, 'url.query.mode', '') === 'confirmation';
     const eventKey = _.get(this.props, 'url.query.key', '');
 
     // Validate
     let validationErrors = {};
-    if(!inputType) validationErrors.inputType = 'Please specify type';
+    if(!eventMode && !inputType) validationErrors.inputType = 'Please specify type';
     if(!inputSize) validationErrors.inputSize = 'Please specify size';
     if(!inputMobile) validationErrors.inputMobile = 'Please enter mobile phone number';
     if(!inputEmail || !this.isValidEmail(inputEmail)) validationErrors.inputEmail = 'Please enter a valid email';
@@ -178,6 +179,8 @@ export default class extends React.Component {
       preorderInfo.delivery_name = inputDeliveryName;
       preorderInfo.mode = 'event';
       preorderInfo.key = eventKey;
+    } else if (confirmationMode) {
+      preorderInfo.mode = 'confirmation';
     }
 
     this.setState({ loading: true });
@@ -190,6 +193,8 @@ export default class extends React.Component {
         //this.setState({ preorderCompleted: true });
         if(eventMode) {
           Router.push(`/thankyou?mode=event&key=${eventKey}`);
+        } else if(confirmationMode) {
+          Router.push(`/confirmed`);
         } else {
           window.location.href = 'https://taejai.com/th/d/limited_education/';
         }
@@ -220,6 +225,7 @@ export default class extends React.Component {
 
   renderShirtInfo() {
     const eventMode = _.get(this.props, 'url.query.mode', '') === 'event';
+    const confirmationMode = _.get(this.props, 'url.query.mode', '') === 'confirmation';
     
     return <div style={shirtInfoStyle}>
       {(enableCustomShirtOrder || eventMode) &&
@@ -236,30 +242,8 @@ export default class extends React.Component {
           </p>
         </div>
       }
-      {/* (!enableCustomShirtOrder && !eventMode) &&
-        <div>
-          <h2 style={{ marginBottom: 0 }}>ขอบคุณทุกท่าน </h2>
-          <p style={{ textAlign: 'left', marginTop: 0 }}>
-          ที่ร่วม "ดีไซน์" การศึกษาของประเทศไทย<br />
-          โดยการบริจาคและสนับสนุนเสื้อ<br />
-          Greyhound Limited Education แบบ "ชื่อของคุณ" <br />
-          โดยได้รับการสนับสนุนผ่านทางออนไลน์ <strong style={soldoutTextStyle}>เต็มจำนวนแล้ว</strong>
-          </p>
 
-          <p>สำหรับผู้ที่ต้องการบริจาคเพิ่มเติม 
-          ตั้งแต่วันที่ 6 มิถุนายน 2560 เวลา 18:00 น. ทุกการบริจาคตั้งแต่ 550 บาท 
-          จะได้รับเสื้อที่ระลึกลายโลโก้ Greyhound Limited Education 
-          ภายในเดือนกรกฎาคม 2560 เป็นต้นไป (รวมค่าจัดส่งไปรษณีย์แล้ว)
-          </p>
-          <a href="/static/images/limited-tshirt-2.jpg" target="_blank"><img src="/static/images/limited-tshirt-2.jpg" style={{ width: '100%' }}/></a>
-          <p>
-          แล้วพบกับกิจกรรม Limited Education ที่งาน "ทำดีหวังผล" วันที่ 9-11 มิถุนายนนี้ Education Pavilion โซน Eden ชั้น 2 Central World
-
-          </p>
-        </div>
-      */}
-
-      {(!enableCustomShirtOrder && !eventMode) &&
+      {(!enableCustomShirtOrder && !eventMode && !confirmationMode) &&
         <div>
           <p>
           จากผลการตอบรับที่ดีมากตั้งแต่ที่พวกเราได้เปิดตัวแคมเปญ Limited Edition Education 
@@ -275,6 +259,24 @@ export default class extends React.Component {
           หรือ เลือกรับเสื้อยืดที่ระลึกลายโลโก้ Greyhound Limited  Edition Education  
           โดยเสื้อที่ระลึกจะทำการจัดส่งให้กับทุกท่านในเดือนกรกฎาคม 2560 เป็นต้นไป
           </p>
+
+          <p>
+            หากต้องการสอบถามเพิ่มเติม สามารถ inbox รายละเอียดได้ที่ <a href="http://facebook.com/yuvabadhana">facebook.com/yuvabadhana</a> หรือ อีเมล info.limitededucation@gmail.com
+          </p>
+        </div>
+      }
+      {confirmationMode &&
+        <div>
+          <h2>ขอบคุณสำหรับเงินบริจาคของคุณ </h2>
+
+          <p>กรุณากรอกข้อมูลดังต่อไปนี้เพื่อเป็นการยืนยันการรับเสื้อ (สำหรับท่านที่ยังไม่ได้กรอกข้อมูลเท่านั้น)</p>
+
+          <p>
+            หากต้องการสอบถามเพิ่มเติม สามารถ inbox รายละเอียดได้ที่  
+            <a href="http://facebook.com/yuvabadhana">facebook.com/yuvabadhana</a>
+            หรือ อีเมล info.limitededucation@gmail.com
+          </p>
+
         </div>
       }
     </div>;
@@ -283,27 +285,33 @@ export default class extends React.Component {
   renderPreorderForm() {
     const { validationErrors } = this.state;
     const eventMode = _.get(this.props, 'url.query.mode', '') === 'event';
+    const confirmationMode = _.get(this.props, 'url.query.mode', '') === 'confirmation';
     const shareId = _.get(this.props, 'url.query.shareid');
+    const actionText = confirmationMode ? 'ยืนยัน' : 'บริจาค';
 
     return <div>
       {!this.state.preorderCompleted &&
         <form style={preorderFormStyle} onSubmit={this.onPreorderClick.bind(this)}>
-          <div className="form-group" style={formGroupStyle}>
-            <label>แบบเสื้อที่ต้องการ</label><br /><br />
-            <div>
-              <input type="radio" name="inputType" value="yourname" onChange={this.onFormValueChanged.bind(this)} style={radioStyle}/> <label> 1. แบบ "ชื่อคุณ"
-                <img src={`${sharedImageBaseUrl}${shareId}.jpg`} style={shirtPreviewStyle} />
-              </label>
-              <br /><br />
-              <input type="radio" name="inputType" value="limitededucation" onChange={this.onFormValueChanged.bind(this)} style={radioStyle}/> <label> 2. แบบ โลโก้ Limited Edition Education
-                <img src="/static/images/limited-tshirt-2.jpg" style={{ width: '100%' }}/><br/>
-              </label>
+          {!eventMode && 
+            <div className="form-group" style={formGroupStyle}>
+              <label>แบบเสื้อที่ต้องการ</label><br /><br />
+              <div>
+                <input type="radio" name="inputType" value="yourname" onChange={this.onFormValueChanged.bind(this)} style={radioStyle}/> <label> 1. แบบ "ชื่อคุณ"
+                  <img src={`${sharedImageBaseUrl}${shareId}.jpg`} style={shirtPreviewStyle} />
+                </label>
+                <br /><br />
+                <input type="radio" name="inputType" value="limitededucation" onChange={this.onFormValueChanged.bind(this)} style={radioStyle}/> <label> 2. แบบ โลโก้ Limited Edition Education
+                  <img src="/static/images/limited-tshirt-2.jpg" style={{ width: '100%' }}/><br/>
+                </label>
+              </div>
+              {validationErrors.inputType && 
+                <span style={validationErrorStyle}>{validationErrors.inputType}</span>
+              }
             </div>
-            {validationErrors.inputType && 
-              <span style={validationErrorStyle}>{validationErrors.inputType}</span>
-            }
-            <br /><br />
+          }
+          <div className="form-group" style={formGroupStyle}>
             <label>ไซส์เสื้อที่ต้องการ</label><br />
+            <small>(ขอความกรุณาไม่เปลี่ยนไซส์เสื้อนะคะ)</small><br/>
             <div>
               <div style={radioContainerStyle}>
                 <input type="radio" name="inputSize" value="S" onChange={this.onFormValueChanged.bind(this)} style={radioStyle}/> <label><div style={radioLabelStyle}><strong>S</strong><br />รอบอก<br />38"</div></label>
@@ -386,7 +394,9 @@ export default class extends React.Component {
             <div className="loader" />
           }
           {!this.state.loading &&
-            <button onClick={this.onPreorderClick.bind(this)} className="btn btn-yellow" style={{ marginTop: '40px' }}>บริจาค</button>
+            <button onClick={this.onPreorderClick.bind(this)} className="btn btn-yellow" style={{ marginTop: '40px' }}>
+              {actionText}
+            </button>
           }
       </form>}
       {this.state.preorderCompleted && 
